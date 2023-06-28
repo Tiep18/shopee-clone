@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 export default function Login() {
   return (
     <div className='bg-orange'>
-      <div className='mx-auto max-w-7xl px-4'>
-        <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32'>
+      <div className='container'>
+        <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-24'>
           <div className='lg:col-span-2 lg:col-start-4 '>
             <form className='border-sm flex flex-col justify-center rounded border bg-white px-4 py-8 shadow-md'>
               <div className=' text-3xl'>Đăng nhập</div>
@@ -13,7 +13,7 @@ export default function Login() {
                 placeholder='Email'
                 className='border-sm outlite-none mt-8 w-full border border-gray-300 p-3 focus:shadow-sm'
               />
-              <div className='mt-1 min-h-[1rem] text-red-400'>
+              <div className='mt-1 min-h-[1.25rem] text-red-400'>
                 Email không hợp lệ
               </div>
               <input
@@ -21,7 +21,7 @@ export default function Login() {
                 placeholder='Password'
                 className='border-sm outlite-none mt-4 w-full border border-gray-300 p-3 focus:shadow-sm'
               />
-              <div className='mt-1 min-h-[1rem] text-red-400'></div>
+              <div className='mt-1 min-h-[1.25rem] text-red-400'></div>
 
               <button className='mt-4 w-full rounded bg-red-500 p-3 text-white hover:bg-red-700'>
                 Đăng nhập
