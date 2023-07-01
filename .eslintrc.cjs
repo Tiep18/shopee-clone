@@ -53,6 +53,7 @@ module.exports = {
         printWidth: 80,
         jsxSingleQuote: true
       }
-    ]
+    ],
+    'no-console': 'warn'
   }
 }

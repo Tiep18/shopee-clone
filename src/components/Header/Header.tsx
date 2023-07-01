@@ -1,11 +1,26 @@
+import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { logout } from 'src/apis/auth.api'
+import { AppContextProvider } from 'src/contexts/AppContext'
 import Popover from '../Popover'
+import path from 'src/contance/path'
 
 export default function Header() {
+  const { setIsAuthenticated, isAuthenticated, user } =
+    useContext(AppContextProvider)
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => setIsAuthenticated(false)
+  })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
   return (
     <header className='bg-[linear-gradient(-180deg,#f53d2d,#f63)]'>
       <div className='container pb-4 pt-1'>
-        <div className='flex items-center justify-end py-1 text-sm text-white'>
+        <div className='flex cursor-pointer items-center justify-end py-1 text-sm text-white'>
           <Popover
             className='flex items-center hover:text-gray-300'
             renderPopover={
@@ -49,37 +64,56 @@ export default function Header() {
               />
             </svg>
           </Popover>
-          <Popover
-            className='ml-4 flex items-center hover:text-gray-300'
-            renderPopover={
-              <div className='flex min-w-[180px] cursor-pointer flex-col rounded bg-white p-4 text-black shadow-md '>
-                <Link
-                  to={'/'}
-                  className='w-full cursor-pointer hover:text-[#00bfa5]'
-                >
-                  Tài khoản của tôi
-                </Link>
-                <Link
-                  to={'/'}
-                  className='mt-4 w-full cursor-pointer hover:text-[#00bfa5]'
-                >
-                  Đơn mua
-                </Link>
-                <button className='mt-4 w-full cursor-pointer text-left hover:text-[#00bfa5]'>
-                  Đăng xuất
-                </button>
+          {isAuthenticated && (
+            <Popover
+              className='ml-4 flex items-center hover:text-gray-300'
+              renderPopover={
+                <div className='flex min-w-[180px] cursor-pointer flex-col rounded bg-white p-4 text-black shadow-md '>
+                  <Link
+                    to={'/profile'}
+                    className='w-full cursor-pointer hover:text-[#00bfa5]'
+                  >
+                    Tài khoản của tôi
+                  </Link>
+                  <Link
+                    to={'/'}
+                    className='mt-4 w-full cursor-pointer hover:text-[#00bfa5]'
+                  >
+                    Đơn mua
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className='mt-4 w-full cursor-pointer text-left hover:text-[#00bfa5]'
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              }
+            >
+              <div>
+                <img
+                  src='https://down-vn.img.susercontent.com/file/417f6db28f0f91faca11b7fa949ef08b_tn'
+                  alt='avata'
+                  className='mr-1 h-6 w-6 rounded-full object-cover'
+                />
               </div>
-            }
-          >
-            <div>
-              <img
-                src='https://down-vn.img.susercontent.com/file/417f6db28f0f91faca11b7fa949ef08b_tn'
-                alt='avata'
-                className='mr-1 h-6 w-6 rounded-full object-cover'
-              />
+              <div>{user.email}</div>
+            </Popover>
+          )}
+          {!isAuthenticated && (
+            <div className='ml-4 flex items-center justify-between gap-4 '>
+              <Link
+                to={path.register}
+                className=' text-white hover:text-gray-300'
+              >
+                Đăng ký
+              </Link>
+              <div className='h-4 border-r-[1px] border-r-white/40'></div>
+              <Link to={path.login} className='text-white hover:text-gray-300'>
+                Đăng nhập
+              </Link>
             </div>
-            <div>Tiep Pham</div>
-          </Popover>
+          )}
         </div>
         <div className='flex items-end pt-3'>
           <Link to={'/'} className='pr-10'>

@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import Input from 'src/components/Input'
 import { registerSchema } from 'src/utils/rules'
@@ -8,11 +8,17 @@ import { InferType } from 'yup'
 import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { isUnprocessableEntityAxiosError } from 'src/utils/utils'
-import { ResponseAPI } from 'src/types/utils.type'
+import { ErrorResponseAPI } from 'src/types/utils.type'
+import { useContext } from 'react'
+import { AppContextProvider } from 'src/contexts/AppContext'
+import Button from 'src/components/Button'
+import path from 'src/contance/path'
 
 type FormData = InferType<typeof registerSchema>
 
 export default function Register() {
+  const { setIsAuthenticated, setUser } = useContext(AppContextProvider)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -30,11 +36,15 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => console.log(data),
+      onSuccess: (data) => {
+        setIsAuthenticated(true)
+        setUser(data.data.data.user)
+        navigate('/')
+      },
       onError: (error) => {
         if (
           isUnprocessableEntityAxiosError<
-            ResponseAPI<Omit<FormData, 'confirm_password'>>
+            ErrorResponseAPI<Omit<FormData, 'confirm_password'>>
           >(error)
         ) {
           const formData = error.response?.data.data
@@ -50,8 +60,6 @@ export default function Register() {
       }
     })
   })
-
-  console.log(errors)
 
   return (
     <div className='bg-orange'>
@@ -89,12 +97,15 @@ export default function Register() {
                 placeholder='Confirm Password'
               />
 
-              <button className='mt-4 w-full rounded bg-red-500 p-3 text-white hover:bg-red-700'>
+              <Button
+                isLoading={registerAccountMutation.isLoading}
+                className='mt-4 flex w-full items-center justify-center rounded bg-red-500 p-3 text-white hover:bg-red-700'
+              >
                 Đăng ký
-              </button>
+              </Button>
               <div className='mt-8 flex items-center justify-center'>
                 <div className='text-gray-400'>Bạn đã có tài khoản?</div>
-                <Link to={'/login'} className='text-orange ml-1'>
+                <Link to={path.login} className='text-orange ml-1'>
                   Đăng nhập
                 </Link>
               </div>

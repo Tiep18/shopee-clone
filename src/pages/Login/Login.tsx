@@ -1,17 +1,23 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { InferType } from 'yup'
 import { useMutation } from '@tanstack/react-query'
 import Input from 'src/components/Input'
 import { loginShema } from 'src/utils/rules'
 import { login } from 'src/apis/auth.api'
 import { isUnprocessableEntityAxiosError } from 'src/utils/utils'
-import { ResponseAPI } from 'src/types/utils.type'
+import { ErrorResponseAPI } from 'src/types/utils.type'
+import { useContext } from 'react'
+import { AppContextProvider } from 'src/contexts/AppContext'
+import Button from 'src/components/Button'
+import path from 'src/contance/path'
 
 type FormData = InferType<typeof loginShema>
 
 export default function Login() {
+  const { setIsAuthenticated, setUser } = useContext(AppContextProvider)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -27,9 +33,15 @@ export default function Login() {
 
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
-      onSuccess: (data) => console.log(data),
+      onSuccess: (data) => {
+        setIsAuthenticated(true)
+        setUser(data.data.data.user)
+        navigate('/')
+      },
       onError: (error) => {
-        if (isUnprocessableEntityAxiosError<ResponseAPI<FormData>>(error)) {
+        if (
+          isUnprocessableEntityAxiosError<ErrorResponseAPI<FormData>>(error)
+        ) {
           const formData = error.response?.data.data
           if (formData) {
             Object.keys(formData).forEach((key) => {
@@ -71,12 +83,15 @@ export default function Login() {
                 placeholder='Password'
               />
 
-              <button className='mt-4 w-full rounded bg-red-500 p-3 text-white hover:bg-red-700'>
+              <Button
+                isLoading={loginMutation.isLoading}
+                className='mt-4 flex w-full items-center justify-center rounded bg-red-500 p-3 text-white hover:bg-red-700'
+              >
                 Đăng nhập
-              </button>
+              </Button>
               <div className='mt-8 flex items-center justify-center'>
                 <div className='text-gray-400'>Bạn chưa có tài khoản?</div>
-                <Link to={'/register'} className='text-orange ml-1'>
+                <Link to={path.register} className='text-orange ml-1'>
                   Đăng ký
                 </Link>
               </div>
