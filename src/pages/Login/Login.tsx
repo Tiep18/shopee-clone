@@ -5,7 +5,7 @@ import { InferType } from 'yup'
 import { useMutation } from '@tanstack/react-query'
 import Input from 'src/components/Input'
 import { loginShema } from 'src/utils/rules'
-import { login } from 'src/apis/auth.api'
+import authApi from 'src/apis/auth.api'
 import { isUnprocessableEntityAxiosError } from 'src/utils/utils'
 import { ErrorResponseAPI } from 'src/types/utils.type'
 import { useContext } from 'react'
@@ -28,7 +28,7 @@ export default function Login() {
   })
 
   const loginMutation = useMutation({
-    mutationFn: (body: FormData) => login(body)
+    mutationFn: (body: FormData) => authApi.login(body)
   })
 
   const onSubmit = handleSubmit((data) => {

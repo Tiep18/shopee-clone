@@ -10,3 +10,17 @@ export const isUnprocessableEntityAxiosError = <T>(
 ): error is AxiosError<T> => {
   return isAxiosError(error) && error.response?.status === 422
 }
+
+export function formatCurrency(currency: number) {
+  return new Intl.NumberFormat('de-DE').format(currency)
+}
+
+export function convertNumbertoSocialStyle(number: number) {
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 1
+  })
+    .format(number)
+    .replace('.', ',')
+    .toLowerCase()
+}

@@ -9,12 +9,11 @@ import {
 } from './auth'
 import { AuthResponse } from 'src/types/auth.type'
 import User from 'src/types/user.type'
-import path from 'src/contance/path'
 
 class Http {
   instance: AxiosInstance
   private accessToken: string
-  private user: User
+  private user: User | null
   constructor() {
     this.accessToken = getAccessTokenFromLS()
     this.user = getUserFromLS()
@@ -36,13 +35,15 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const url = response.config.url
-        if (url === path.login || url === path.register) {
+        if (url === 'login' || url === 'register') {
           const data = (response.data as AuthResponse).data
           this.accessToken = data.access_token
           this.user = data.user
+
           setAccessTokenAndUserToLS(this.accessToken, this.user)
-        } else if (url === path.logout) {
+        } else if (url === 'logout') {
           this.accessToken = ''
+          this.user = null
           removeAccessTokenAndUserToLS()
         }
         return response

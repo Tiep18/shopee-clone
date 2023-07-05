@@ -83,3 +83,27 @@ export const registerSchema = yup.object({
 })
 
 export const loginShema = registerSchema.omit(['confirm_password'])
+
+export const filterPriceSchema = yup.object({
+  price_min: yup.string().test({
+    name: 'price_rule',
+    message: 'Giá nhập vào không hợp lệ',
+    test: priceMinMaxRule
+  }),
+  price_max: yup.string().test({
+    name: 'price_rule',
+    message: 'Giá nhập vào không hợp lệ',
+    test: priceMinMaxRule
+  })
+})
+
+function priceMinMaxRule(this: yup.TestContext<yup.AnyObject>) {
+  const { price_min, price_max } = this.parent as {
+    price_min: string
+    price_max: string
+  }
+  if (price_min !== '' && price_max !== '') {
+    return Number(price_min) <= Number(price_max)
+  }
+  return price_min !== '' || price_max !== ''
+}
