@@ -1,17 +1,63 @@
-import { useMutation } from '@tanstack/react-query'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { omit } from 'lodash'
 import { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
-import { AppContextProvider } from 'src/contexts/AppContext'
-import Popover from '../Popover'
+import purchaseApi from 'src/apis/purchase.api'
 import path from 'src/contance/path'
+import purchasesStatus from 'src/contance/purchase'
+import { AppContextProvider } from 'src/contexts/AppContext'
+import useQueryConfig from 'src/hooks/useQueryConfig'
+import { PurchaseListStatus } from 'src/types/purchase.type'
+import { searchNameSchema } from 'src/utils/rules'
+import { InferType } from 'yup'
+import Popover from '../Popover'
+import { formatCurrency } from 'src/utils/utils'
+import noCartImg from 'src/assets/images/no-cart.png'
+
+type FormData = InferType<typeof searchNameSchema>
 
 export default function Header() {
+  const navigate = useNavigate()
+  const queryConfig = useQueryConfig()
+  const queryClient = useQueryClient()
   const { setIsAuthenticated, isAuthenticated, user } =
     useContext(AppContextProvider)
+
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => setIsAuthenticated(false)
+  })
+
+  const { data: purchaseList } = useQuery({
+    queryKey: ['purchase', purchasesStatus],
+    queryFn: () =>
+      purchaseApi.readPurchases(purchasesStatus.inCart as PurchaseListStatus)
+  })
+
+  queryClient.invalidateQueries({ queryKey: ['purchase', purchasesStatus] })
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(searchNameSchema)
+  })
+
+  const onSubmit = handleSubmit((data) => {
+    navigate({
+      pathname: path.products,
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+            name: data.name
+          },
+          ['category', 'rating_filter', 'price_min', 'price_max']
+        )
+      ).toString()
+    })
   })
 
   const handleLogout = () => {
@@ -123,12 +169,15 @@ export default function Header() {
               </g>
             </svg>
           </Link>
-          <form className='flex flex-1 items-center rounded border bg-white p-[2px]'>
+          <form
+            className='flex flex-1 items-center rounded border bg-white p-[2px]'
+            onSubmit={onSubmit}
+          >
             <input
               type='text'
-              name='search'
               className='flex-1 border-none bg-transparent px-3 py-2 outline-none'
               placeholder='Tìm kiếm sản phẩm'
+              {...register('name')}
             />
             <button className='bg-orange flex items-center justify-center rounded px-6 py-2 hover:opacity-90'>
               <svg
@@ -152,116 +201,81 @@ export default function Header() {
             className='mx-6 flex shrink cursor-pointer items-center justify-center px-5'
           >
             <Popover
-              className=''
               renderPopover={
-                <div className='flex max-w-[400px] cursor-pointer flex-col rounded bg-white py-3 text-sm shadow-md '>
-                  <div className='px-3 capitalize text-gray-300'>
-                    Sản phẩm mới thêm
-                  </div>
-                  <div className='mt-4 flex flex-col'>
-                    <div className='flex items-start px-3 py-2 hover:bg-neutral-100'>
-                      <div className='border-orange shrink-0 rounded-sm border '>
-                        <img
-                          src='https://down-vn.img.susercontent.com/file/74db617f6de3bd62f3b67cbdc79ccebd_tn'
-                          alt='anh'
-                          className='h-11 w-11 object-cover'
-                        />
-                      </div>
-                      <div className='ml-2 flex-grow overflow-hidden'>
-                        <div className='truncate'>
-                          Bông tẩy trang Lameila 222 miếng
-                        </div>
-                      </div>
-                      <div className='text-orange ml-2 flex shrink-0 items-start'>
-                        <span className='mr-[1px] block text-[10px] underline'>
-                          đ
-                        </span>
-                        16.900
-                      </div>
+                purchaseList ? (
+                  <div className='flex max-w-[400px] cursor-pointer flex-col rounded bg-white py-3 text-sm shadow-md '>
+                    <div className='px-3 capitalize text-gray-300'>
+                      Sản phẩm mới thêm
                     </div>
-                    <div className='flex items-start px-3 py-2 hover:bg-neutral-100'>
-                      <div className='border-orange shrink-0 rounded-sm border '>
-                        <img
-                          src='https://down-vn.img.susercontent.com/file/74db617f6de3bd62f3b67cbdc79ccebd_tn'
-                          alt='anh'
-                          className='h-11 w-11 object-cover'
-                        />
-                      </div>
-                      <div className='ml-2 flex-grow overflow-hidden'>
-                        <div className='truncate'>
-                          Bông tẩy trang Lameila 222 miếng
+                    <div className='mt-4 flex flex-col'>
+                      {purchaseList.data.data.slice(0, 5).map((purchase) => (
+                        <div
+                          key={purchase._id}
+                          className='flex items-start px-3 py-2 hover:bg-neutral-100'
+                        >
+                          <div className='border-orange shrink-0 rounded-sm border '>
+                            <img
+                              src={purchase.product.image}
+                              alt={purchase.product.name}
+                              className='h-11 w-11 object-cover'
+                            />
+                          </div>
+                          <div className='ml-2 max-w-[60%] flex-grow overflow-hidden'>
+                            <div className='truncate'>
+                              {purchase.product.name}
+                            </div>
+                          </div>
+                          <div className='text-orange ml-auto flex shrink-0 items-start'>
+                            <span className='mr-[1px] block text-[10px] underline'>
+                              đ
+                            </span>
+                            {formatCurrency(purchase.product.price)}
+                          </div>
                         </div>
-                      </div>
-                      <div className='text-orange ml-2 flex shrink-0 items-start'>
-                        <span className='mr-[1px] block text-[10px] underline'>
-                          đ
-                        </span>
-                        16.900
-                      </div>
+                      ))}
                     </div>
-                    <div className='flex items-start px-3 py-2 hover:bg-neutral-100'>
-                      <div className='border-orange shrink-0 rounded-sm border '>
-                        <img
-                          src='https://down-vn.img.susercontent.com/file/74db617f6de3bd62f3b67cbdc79ccebd_tn'
-                          alt='anh'
-                          className='h-11 w-11 object-cover'
-                        />
-                      </div>
-                      <div className='ml-2 flex-grow overflow-hidden'>
-                        <div className='truncate'>
-                          Bông tẩy trang Lameila 222 miếng
+                    <div className='mt-3 flex items-end justify-between px-3'>
+                      {purchaseList.data.data.length > 5 && (
+                        <div className='capitalize text-gray-500'>
+                          {purchaseList.data.data.length - 5} Thêm hàng vào giỏ
                         </div>
-                      </div>
-                      <div className='text-orange ml-2 flex shrink-0 items-start'>
-                        <span className='mr-[1px] block text-[10px] underline'>
-                          đ
-                        </span>
-                        16.900
-                      </div>
-                    </div>
-                    <div className='flex items-start px-3 py-2 hover:bg-neutral-100'>
-                      <div className='border-orange shrink-0 rounded-sm border '>
-                        <img
-                          src='https://down-vn.img.susercontent.com/file/74db617f6de3bd62f3b67cbdc79ccebd_tn'
-                          alt='anh'
-                          className='h-11 w-11 object-cover'
-                        />
-                      </div>
-                      <div className='ml-2 flex-grow overflow-hidden'>
-                        <div className='truncate'>
-                          Bông tẩy trang Lameila 222 miếng tiện lợi cho sử dụng
-                        </div>
-                      </div>
-                      <div className='text-orange ml-2 flex shrink-0 items-start'>
-                        <span className='mr-[1px] block text-[10px] underline'>
-                          đ
-                        </span>
-                        16.900
-                      </div>
+                      )}
+                      <button className='bg-orange ml-auto rounded-sm border px-4 py-2 text-white hover:opacity-90'>
+                        Xem giỏ hàng
+                      </button>
                     </div>
                   </div>
-                  <div className='mt-3 flex items-center justify-end px-3'>
-                    <button className='bg-orange rounded-sm border px-4 py-2 text-white hover:opacity-90'>
-                      Xem giỏ hàng
-                    </button>
+                ) : (
+                  <div className='flex h-[300px] w-[400px] flex-col items-center justify-center rounded border bg-white shadow-lg'>
+                    <img className='h-20 w-20' src={noCartImg} alt='no-cart' />
+                    <span className='mt-3 capitalize text-gray-500'>
+                      Chưa có sản phẩm
+                    </span>
                   </div>
-                </div>
+                )
               }
             >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='mx-4 h-8 w-8 text-white'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-                />
-              </svg>
+              <div className='relative'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='mx-4 h-8 w-8 text-white'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+                  />
+                </svg>
+                {purchaseList && (
+                  <div className='text-orange border-orange absolute left-9 top-[-6px] rounded-full border-2 bg-white px-2 py-[1px]'>
+                    {purchaseList.data.data.length}
+                  </div>
+                )}
+              </div>
             </Popover>
           </Link>
         </div>

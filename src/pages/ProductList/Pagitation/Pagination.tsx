@@ -1,7 +1,7 @@
 import { Link, createSearchParams } from 'react-router-dom'
 import className from 'classnames'
-import { QueryConfig } from '../ProductList'
 import path from 'src/contance/path'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 
 const RANGE = 2
 

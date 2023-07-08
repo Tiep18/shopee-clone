@@ -1,4 +1,15 @@
-export default function RatingStars({ percent }: { percent: number }) {
+interface Props {
+  percent: number
+  mainStarClassName?: string
+  subStarClassName?: string
+}
+
+export default function RatingStars(Props: Props) {
+  const {
+    percent,
+    mainStarClassName = 'h-3 w-3 fill-yellow-500',
+    subStarClassName = 'h-3 w-3 fill-gray-300'
+  } = Props
   return (
     <div className='relative'>
       <div
@@ -10,7 +21,7 @@ export default function RatingStars({ percent }: { percent: number }) {
           viewBox='0 0 15 15'
           x={0}
           y={0}
-          className='h-3 w-3 fill-yellow-500'
+          className={mainStarClassName}
         >
           <polygon
             points='7.5 .8 9.7 5.4 14.5 5.9 10.7 9.1 11.8 14.2 7.5 11.6 3.2 14.2 4.3 9.1 .5 5.9 5.3 5.4'
@@ -25,7 +36,7 @@ export default function RatingStars({ percent }: { percent: number }) {
         viewBox='0 0 15 15'
         x={0}
         y={0}
-        className='h-3 w-3 fill-gray-300'
+        className={subStarClassName}
       >
         <polygon
           points='7.5 .8 9.7 5.4 14.5 5.9 10.7 9.1 11.8 14.2 7.5 11.6 3.2 14.2 4.3 9.1 .5 5.9 5.3 5.4'

@@ -1,14 +1,23 @@
 import { Product as ProductType } from 'src/types/product.type'
 import RatingStars from './RatingStars'
-import { convertNumbertoSocialStyle, formatCurrency } from 'src/utils/utils'
-
+import {
+  convertNumbertoSocialStyle,
+  formatCurrency,
+  generateNameId
+} from 'src/utils/utils'
+import { Link } from 'react-router-dom'
 interface ProductProps {
   product: ProductType
 }
 
 export default function Product({ product }: ProductProps) {
+  const { _id, name } = product
+  const nameId = generateNameId({ name, id: _id })
   return (
-    <div className='hover:border-orange overflow-hidden rounded-sm border bg-white shadow transition-transform duration-100 hover:translate-y-[-0.1rem] hover:shadow-md'>
+    <Link
+      to={`/${nameId}`}
+      className='hover:border-orange block overflow-hidden rounded-sm border bg-white shadow transition-transform duration-100 hover:translate-y-[-0.1rem] hover:shadow-md'
+    >
       <div className='relative w-full pt-[100%]'>
         <img
           src={product.image}
@@ -49,6 +58,6 @@ export default function Product({ product }: ProductProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

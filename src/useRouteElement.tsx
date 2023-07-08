@@ -8,6 +8,7 @@ import Register from './pages/Register'
 import { useContext } from 'react'
 import { AppContextProvider } from './contexts/AppContext'
 import path from './contance/path'
+import ProductDetail from './pages/ProductDetail'
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useContext(AppContextProvider)
@@ -39,6 +40,14 @@ export default function useRouteElement() {
           element: (
             <MainLayout>
               <Profile />
+            </MainLayout>
+          )
+        },
+        {
+          path: path.product,
+          element: (
+            <MainLayout>
+              <ProductDetail />
             </MainLayout>
           )
         }

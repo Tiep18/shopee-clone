@@ -82,7 +82,11 @@ export const registerSchema = yup.object({
     .oneOf([yup.ref('password')], 'Nhập lại password không chính xác')
 })
 
-export const loginShema = registerSchema.omit(['confirm_password'])
+export const loginSchema = registerSchema.omit(['confirm_password'])
+
+export const searchNameSchema = yup.object({
+  name: yup.string().trim().required()
+})
 
 export const filterPriceSchema = yup.object({
   price_min: yup.string().test({

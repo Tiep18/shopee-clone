@@ -2,7 +2,6 @@ import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
 import path from 'src/contance/path'
 import { Category } from 'src/types/category.type'
-import { QueryConfig } from '../ProductList'
 import classNames from 'classnames'
 import InputNumber from 'src/components/InputNumber'
 import { useForm, Controller } from 'react-hook-form'
@@ -12,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { RemoveUndefined } from 'src/types/utils.type'
 import RatingStarFilter from './RatingStarsFilter'
 import { omit } from 'lodash'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 
 interface Props {
   categories: Category[]
@@ -115,10 +115,7 @@ export default function Aside({ categories, queryConfig }: Props) {
           </li>
         ))}
       </ul>
-      <Link
-        to={path.products}
-        className='mt-4 flex items-center font-bold uppercase'
-      >
+      <div className='mt-4 flex items-center font-bold uppercase'>
         <svg
           enableBackground='new 0 0 15 15'
           viewBox='0 0 15 15'
@@ -137,7 +134,7 @@ export default function Aside({ categories, queryConfig }: Props) {
           </g>
         </svg>
         Bộ lọc tìm kiếm
-      </Link>
+      </div>
       <div className='my-4 h-[1px] bg-gray-300' />
       <div className='my-5'>
         <div className='mb-4 font-semibold'>Khoảng giá</div>

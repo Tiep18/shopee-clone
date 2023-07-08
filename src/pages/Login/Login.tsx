@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { InferType } from 'yup'
 import { useMutation } from '@tanstack/react-query'
 import Input from 'src/components/Input'
-import { loginShema } from 'src/utils/rules'
+import { loginSchema } from 'src/utils/rules'
 import authApi from 'src/apis/auth.api'
 import { isUnprocessableEntityAxiosError } from 'src/utils/utils'
 import { ErrorResponseAPI } from 'src/types/utils.type'
@@ -13,7 +13,7 @@ import { AppContextProvider } from 'src/contexts/AppContext'
 import Button from 'src/components/Button'
 import path from 'src/contance/path'
 
-type FormData = InferType<typeof loginShema>
+type FormData = InferType<typeof loginSchema>
 
 export default function Login() {
   const { setIsAuthenticated, setUser } = useContext(AppContextProvider)
@@ -24,7 +24,7 @@ export default function Login() {
     setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(loginShema)
+    resolver: yupResolver(loginSchema)
   })
 
   const loginMutation = useMutation({
