@@ -12,13 +12,16 @@ import { RemoveUndefined } from 'src/types/utils.type'
 import RatingStarFilter from './RatingStarsFilter'
 import { omit } from 'lodash'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
+import InputV2 from 'src/components/InputV2'
 
 interface Props {
   categories: Category[]
   queryConfig: QueryConfig
 }
 
-type FormState = RemoveUndefined<InferType<typeof filterPriceSchema>>
+export type FormPriceState = RemoveUndefined<
+  InferType<typeof filterPriceSchema>
+>
 
 export default function Aside({ categories, queryConfig }: Props) {
   const navigate = useNavigate()
@@ -29,7 +32,7 @@ export default function Aside({ categories, queryConfig }: Props) {
     trigger,
     formState: { errors },
     reset
-  } = useForm<FormState>({
+  } = useForm<FormPriceState>({
     defaultValues: {
       price_max: '',
       price_min: ''
@@ -140,7 +143,7 @@ export default function Aside({ categories, queryConfig }: Props) {
         <div className='mb-4 font-semibold'>Khoảng giá</div>
         <form className='mt-2' onSubmit={onSubmit}>
           <div className='flex items-start'>
-            <Controller
+            {/* <Controller
               control={control}
               name='price_min'
               render={({ field }) => {
@@ -156,6 +159,18 @@ export default function Aside({ categories, queryConfig }: Props) {
                     }}
                   />
                 )
+              }}
+            /> */}
+
+            <InputV2
+              type='number'
+              control={control}
+              name='price_min'
+              placeholder='₫ TỪ'
+              inputClassName='px-1 py-2 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+              errorClassName='hidden'
+              onChange={() => {
+                trigger('price_max')
               }}
             />
 

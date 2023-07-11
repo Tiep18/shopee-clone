@@ -15,6 +15,24 @@ const purchaseApi = {
         status
       }
     })
+  },
+  updatePurchase: (body: { product_id: string; buy_count: number }) => {
+    return http.put<SuccessResponseAPI<Purchase>>(
+      'purchases/update-purchase',
+      body
+    )
+  },
+  deletePurchase: (body: string[]) => {
+    return http.delete<SuccessResponseAPI<{ deleted_count: number }>>(
+      'purchases',
+      { data: body }
+    )
+  },
+  buyPurchases: (body: { product_id: string; buy_count: number }[]) => {
+    return http.post<SuccessResponseAPI<Purchase[]>>(
+      'purchases/buy-products',
+      body
+    )
   }
 }
 

@@ -7,6 +7,7 @@ interface Props extends InputProps {
   onIncrease?: (value: number) => void
   onDecrease?: (value: number) => void
   onType?: (value: number) => void
+  onFocusOut?: (value: number) => void
   wrapperClassName?: string
 }
 
@@ -15,6 +16,7 @@ export default function QuantityController({
   onIncrease,
   onDecrease,
   onType,
+  onFocusOut,
   wrapperClassName = 'ml-8',
   value,
   ...rest
@@ -48,11 +50,16 @@ export default function QuantityController({
     setLocalValue(_value)
   }
 
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement, Element>) => {
+    const _value = Number(event.target.value)
+    onFocusOut && onFocusOut(_value)
+  }
+
   return (
     <div className={'flex items-center ' + wrapperClassName}>
       <button
         onClick={handleDecreaseClick}
-        className='flex h-8 w-8 items-center justify-center border-y border-l border-y-gray-200 border-l-gray-200'
+        className='flex h-8 max-h-full w-8 items-center justify-center border-y border-l border-y-gray-200 border-l-gray-200'
       >
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -67,14 +74,15 @@ export default function QuantityController({
       </button>
       <InputNumber
         errorClassName='hidden'
-        inputClassName='border border-gray-200 h-8 w-16 outline-none text-center'
+        inputClassName='border border-gray-200 h-8 w-14 max-w-full max-h-full outline-none text-center'
         value={value || loacalValue}
         onChange={handleChange}
+        onBlur={handleBlur}
         {...rest}
       />
       <button
         onClick={handleIncreaseClick}
-        className='flex h-8 w-8 items-center justify-center border-y border-r border-y-gray-200 border-r-gray-200'
+        className='flex h-8 max-h-full w-8 items-center justify-center border-y border-r border-y-gray-200 border-r-gray-200'
       >
         <svg
           xmlns='http://www.w3.org/2000/svg'

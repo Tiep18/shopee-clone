@@ -9,6 +9,8 @@ import { useContext } from 'react'
 import { AppContextProvider } from './contexts/AppContext'
 import path from './contance/path'
 import ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
+import CartLayout from './Layouts/CartLayout'
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useContext(AppContextProvider)
@@ -49,6 +51,14 @@ export default function useRouteElement() {
             <MainLayout>
               <ProductDetail />
             </MainLayout>
+          )
+        },
+        {
+          path: path.cart,
+          element: (
+            <CartLayout>
+              <Cart />
+            </CartLayout>
           )
         }
       ]

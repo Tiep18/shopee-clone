@@ -44,3 +44,30 @@ export const getIdFromNameId = (nameId: string) => {
   const arr = nameId.split('-i-')
   return arr[arr.length - 1]
 }
+
+export function handleStickyElement(element: HTMLElement) {
+  const observer = new IntersectionObserver(
+    function ([e]) {
+      if (e.intersectionRatio < 1 && element)
+        element.classList.add(
+          'before:top-[-1.25rem]',
+          'before:absolute',
+          'before:left-0',
+          'before:h-[1.25rem]',
+          'before:w-full',
+          'before:bg-[linear-gradient(transparent,rgba(0,0,0,.08))]'
+        )
+      if (e.intersectionRatio === 1 && element)
+        element.classList.remove(
+          'before:top-[-1.25rem]',
+          'before:absolute',
+          'before:left-0',
+          'before:h-[1.25rem]',
+          'before:w-full',
+          'before:bg-[linear-gradient(transparent,rgba(0,0,0,.08))]'
+        )
+    },
+    { threshold: [1] }
+  )
+  return observer.observe(element)
+}

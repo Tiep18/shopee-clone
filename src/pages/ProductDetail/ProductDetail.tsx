@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import Button from 'src/components/Button'
 import {
@@ -11,19 +11,23 @@ import {
 import RatingStars from '../ProductList/Product/RatingStars'
 import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { ProductConfig } from 'src/types/product.type'
+import { Product as ProductType, ProductConfig } from 'src/types/product.type'
 import Product from '../ProductList/Product'
 import QuantityController from 'src/components/QuantityController'
 import purchaseApi from 'src/apis/purchase.api'
 import { toast } from 'react-toastify'
+import purchasesStatus from 'src/contance/purchase'
+import path from 'src/contance/path'
 
 export default function ProductDetail() {
   const { nameId } = useParams()
+  const navigate = useNavigate()
   const id = getIdFromNameId(nameId as string)
   const [activeImage, setActiveImage] = useState('')
   const [buyCount, setBuyCount] = useState(1)
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const imageRef = useRef<HTMLImageElement>(null)
+  const queryClient = useQueryClient()
   const { data } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productApi.getProduct(id as string)
@@ -43,8 +47,12 @@ export default function ProductDetail() {
   })
 
   const purchaseMutation = useMutation({
-    mutationFn: (body: { product_id: string; buy_count: number }) =>
-      purchaseApi.addToCart(body)
+    mutationFn: purchaseApi.addToCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['purchase', purchasesStatus.inCart]
+      })
+    }
   })
 
   const handleBuyCount = (value: number) => {
@@ -54,14 +62,25 @@ export default function ProductDetail() {
   const handleAndToCart = () => {
     purchaseMutation.mutate(
       {
-        product_id: product?._id as string,
+        product_id: (product as ProductType)._id,
         buy_count: buyCount
       },
       {
-        onSuccess: (data) =>
+        onSuccess: (data) => {
           toast.success(data.data.message, { autoClose: 2000 })
+        }
       }
     )
+  }
+
+  const buyNow = async () => {
+    const res = await purchaseMutation.mutateAsync({
+      product_id: (product as ProductType)._id,
+      buy_count: buyCount
+    })
+    navigate(path.cart, {
+      state: { purchaseId: res.data.data._id }
+    })
   }
 
   useEffect(() => {
@@ -284,7 +303,10 @@ export default function ProductDetail() {
                 </svg>
                 Thêm vào giỏ hàng
               </Button>
-              <Button className='bg-orange hover:bg-orange/90 h-12 rounded-sm px-6 text-white'>
+              <Button
+                onClick={buyNow}
+                className='bg-orange hover:bg-orange/90 h-12 rounded-sm px-6 text-white'
+              >
                 Mua ngay
               </Button>
             </div>
