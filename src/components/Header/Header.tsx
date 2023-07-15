@@ -65,7 +65,7 @@ export default function Header() {
             </button>
           </form>
           <Link
-            to={'/'}
+            to={path.cart}
             className='mx-6 flex shrink cursor-pointer items-center justify-center px-5'
           >
             <Popover

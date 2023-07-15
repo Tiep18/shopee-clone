@@ -1,27 +1,26 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import classNames from 'classnames'
+import { omit } from 'lodash'
+import { Controller, useForm } from 'react-hook-form'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
-import path from 'src/contance/path'
-import { Category } from 'src/types/category.type'
-import classNames from 'classnames'
 import InputNumber from 'src/components/InputNumber'
-import { useForm, Controller } from 'react-hook-form'
-import { filterPriceSchema } from 'src/utils/rules'
-import { InferType } from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { RemoveUndefined } from 'src/types/utils.type'
-import RatingStarFilter from './RatingStarsFilter'
-import { omit } from 'lodash'
-import { QueryConfig } from 'src/hooks/useQueryConfig'
 import InputV2 from 'src/components/InputV2'
+import path from 'src/contance/path'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
+import { Category } from 'src/types/category.type'
+import { filterPriceSchema } from 'src/utils/rules'
+import RatingStarFilter from './RatingStarsFilter'
 
 interface Props {
   categories: Category[]
   queryConfig: QueryConfig
 }
 
-export type FormPriceState = RemoveUndefined<
-  InferType<typeof filterPriceSchema>
->
+export type FormPriceState = {
+  price_min: string | undefined
+  price_max: string | undefined
+}
 
 export default function Aside({ categories, queryConfig }: Props) {
   const navigate = useNavigate()
@@ -45,8 +44,8 @@ export default function Aside({ categories, queryConfig }: Props) {
       pathname: path.products,
       search: createSearchParams({
         ...queryConfig,
-        price_min: data.price_min,
-        price_max: data.price_max
+        price_min: data.price_min || '',
+        price_max: data.price_max || ''
       }).toString()
     })
   })

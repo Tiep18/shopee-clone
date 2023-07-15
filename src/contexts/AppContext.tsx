@@ -10,6 +10,7 @@ interface InitialContext {
   setUser: React.Dispatch<React.SetStateAction<User>>
   extraPurchaseList: ExtraPurchase[]
   setExtraPurchaseList: React.Dispatch<React.SetStateAction<ExtraPurchase[]>>
+  reset: () => void
 }
 
 const initialAppContext: InitialContext = {
@@ -18,7 +19,8 @@ const initialAppContext: InitialContext = {
   user: getUserFromLS(),
   setUser: () => null,
   extraPurchaseList: [],
-  setExtraPurchaseList: () => null
+  setExtraPurchaseList: () => null,
+  reset: () => null
 }
 export const AppContextProvider = createContext(initialAppContext)
 
@@ -34,6 +36,10 @@ export default function AppContext({
   const [extraPurchaseList, setExtraPurchaseList] = useState<ExtraPurchase[]>(
     initialAppContext.extraPurchaseList
   )
+
+  const reset = () => {
+    setIsAuthenticated(false), setExtraPurchaseList([])
+  }
   return (
     <AppContextProvider.Provider
       value={{
@@ -42,7 +48,8 @@ export default function AppContext({
         user,
         setUser,
         extraPurchaseList,
-        setExtraPurchaseList
+        setExtraPurchaseList,
+        reset
       }}
     >
       {children}

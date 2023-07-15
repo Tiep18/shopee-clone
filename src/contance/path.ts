@@ -2,7 +2,10 @@ const path = {
   products: '/',
   login: '/login',
   register: '/register',
-  profile: '/profile',
+  user: '/user',
+  profile: '/user/profile',
+  password: '/user/password',
+  historyPurchases: '/user/purchases',
   logout: '/logout',
   product: '/:nameId',
   cart: '/cart'

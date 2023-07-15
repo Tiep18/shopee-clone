@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import path from 'src/contance/path'
 import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
+import { getAvatarUrl } from 'src/utils/utils'
 
 export default function NavHeader() {
   const { setIsAuthenticated, isAuthenticated, user } =
@@ -68,13 +69,13 @@ export default function NavHeader() {
           renderPopover={
             <div className='flex min-w-[180px] cursor-pointer flex-col rounded bg-white p-4 text-black shadow-md '>
               <Link
-                to={'/profile'}
+                to={path.profile}
                 className='w-full cursor-pointer hover:text-[#00bfa5]'
               >
                 Tài khoản của tôi
               </Link>
               <Link
-                to={'/'}
+                to={path.historyPurchases}
                 className='mt-4 w-full cursor-pointer hover:text-[#00bfa5]'
               >
                 Đơn mua
@@ -90,7 +91,7 @@ export default function NavHeader() {
         >
           <div>
             <img
-              src='https://down-vn.img.susercontent.com/file/417f6db28f0f91faca11b7fa949ef08b_tn'
+              src={getAvatarUrl(user.avatar)}
               alt='avata'
               className='mr-1 h-6 w-6 rounded-full object-cover'
             />

@@ -1,4 +1,6 @@
 import axios, { type AxiosError } from 'axios'
+import config from 'src/contance/config'
+import avatar from 'src/assets/images/avatar-svgrepo-com.svg'
 
 export const isAxiosError = <T>(error: unknown): error is AxiosError<T> => {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -70,4 +72,8 @@ export function handleStickyElement(element: HTMLElement) {
     { threshold: [1] }
   )
   return observer.observe(element)
+}
+
+export const getAvatarUrl = (avatarName?: string) => {
+  return avatarName ? `${config.baseURL}images/${avatarName}` : avatar
 }
