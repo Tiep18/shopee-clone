@@ -38,7 +38,6 @@ export default function ProductDetail() {
     limit: 20,
     category: product?.category._id
   }
-
   const { data: productsData } = useQuery({
     queryKey: ['products', productsConfig],
     queryFn: () => productApi.getProductList(productsConfig),
