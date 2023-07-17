@@ -1,6 +1,8 @@
 import axios, { type AxiosError } from 'axios'
 import config from 'src/contance/config'
 import avatar from 'src/assets/images/avatar-svgrepo-com.svg'
+import HttpStatusCode from 'src/contance/httpStatusCode'
+import { ErrorResponseAPI } from 'src/types/utils.type'
 
 export const isAxiosError = <T>(error: unknown): error is AxiosError<T> => {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -10,7 +12,29 @@ export const isAxiosError = <T>(error: unknown): error is AxiosError<T> => {
 export const isUnprocessableEntityAxiosError = <T>(
   error: unknown
 ): error is AxiosError<T> => {
-  return isAxiosError(error) && error.response?.status === 422
+  return (
+    isAxiosError(error) &&
+    error.response?.status === HttpStatusCode.UnprocessableEntity
+  )
+}
+
+export const isUnauthorizedAxiosError = <T>(
+  error: unknown
+): error is AxiosError<T> => {
+  return (
+    isAxiosError(error) &&
+    error.response?.status === HttpStatusCode.Unauthorized
+  )
+}
+
+export const isExpireTokenError = <T>(
+  error: unknown
+): error is AxiosError<T> => {
+  return (
+    isUnauthorizedAxiosError<
+      ErrorResponseAPI<{ name: string; message: string }>
+    >(error) && error.response?.data?.data?.name === 'EXPIRED_TOKEN'
+  )
 }
 
 export function formatCurrency(currency: number) {

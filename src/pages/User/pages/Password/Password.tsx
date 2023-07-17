@@ -26,6 +26,7 @@ export default function Password() {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
@@ -43,6 +44,7 @@ export default function Password() {
       const res = await updateProfileMutation.mutateAsync(
         omit(data, 'confirm_password')
       )
+      reset()
       toast.success(res.data.message)
     } catch (error) {
       if (isUnprocessableEntityAxiosError<ErrorResponseAPI<FormData>>(error)) {

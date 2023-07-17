@@ -5,6 +5,11 @@ export const getAccessTokenFromLS = () => {
   return accessToken
 }
 
+export const getRefreshTokenFromLS = () => {
+  const refreshToken = localStorage.getItem('refresh_token') ?? ''
+  return refreshToken
+}
+
 export const getUserFromLS = () => {
   const user = localStorage.getItem('user')
   return user ? JSON.parse(user) : undefined
@@ -23,11 +28,16 @@ export const setAccessTokenAndUserToLS = (
   }
 }
 
+export const setRefreshTokenToLS = (refreshToken: string) => {
+  localStorage.setItem('refresh_token', refreshToken)
+}
+
 const removeLSEvent = new Event('removeLS')
 export const removeLSEventTarget = new EventTarget()
 
-export const removeAccessTokenAndUserToLS = () => {
+export const removeLS = () => {
   localStorage.removeItem('access_token')
+  localStorage.removeItem('refresh_token')
   localStorage.removeItem('user')
   removeLSEventTarget.dispatchEvent(removeLSEvent)
 }
