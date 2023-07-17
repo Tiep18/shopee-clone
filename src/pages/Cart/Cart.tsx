@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { produce } from 'immer'
 import { toast } from 'react-toastify'
-import { keyBy } from 'lodash'
+import keyBy from 'lodash/keyBy'
 import { useContext, useEffect, useMemo, useRef } from 'react'
 import purchaseApi from 'src/apis/purchase.api'
 import Button from 'src/components/Button'

@@ -35,7 +35,7 @@ export default function Input({
   }, [type, isOpenEye])
 
   return (
-    <div className={className}>
+    <div className={'relative ' + className}>
       <input
         name={!register && name ? name : undefined}
         className={inputClassName}

@@ -4,7 +4,7 @@ import { InferType } from 'yup'
 import { searchNameSchema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import path from 'src/contance/path'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import useQueryConfig from './useQueryConfig'
 
 type FormData = InferType<typeof searchNameSchema>

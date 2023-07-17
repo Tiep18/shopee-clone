@@ -7,7 +7,7 @@ import { InferType } from 'yup'
 import { profileSchema } from 'src/utils/rules'
 import { useMutation } from '@tanstack/react-query'
 import userApi from 'src/apis/user.api'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import { isUnprocessableEntityAxiosError } from 'src/utils/utils'
 import { ErrorResponseAPI } from 'src/types/utils.type'
 
