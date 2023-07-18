@@ -18,11 +18,13 @@ import purchaseApi from 'src/apis/purchase.api'
 import { toast } from 'react-toastify'
 import purchasesStatus from 'src/contance/purchase'
 import path from 'src/contance/path'
+import { useTranslation } from 'react-i18next'
 
 export default function ProductDetail() {
   const { nameId } = useParams()
   const navigate = useNavigate()
   const id = getIdFromNameId(nameId as string)
+  const { t } = useTranslation(['product'])
   const [activeImage, setActiveImage] = useState('')
   const [buyCount, setBuyCount] = useState(1)
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
@@ -253,7 +255,8 @@ export default function ProductDetail() {
                 max={product.quantity}
               />
               <div className='ml-4 flex items-center text-sm text-gray-500'>
-                {product.quantity} <span className='ml-1'>Sản phẩm có sẵn</span>
+                {product.quantity}{' '}
+                <span className='ml-1'>{t('available products')}</span>
               </div>
             </div>
             <div className='mt-6 flex items-center justify-start gap-3'>

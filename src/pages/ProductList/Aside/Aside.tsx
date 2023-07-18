@@ -11,6 +11,7 @@ import { QueryConfig } from 'src/hooks/useQueryConfig'
 import { Category } from 'src/types/category.type'
 import { filterPriceSchema } from 'src/utils/rules'
 import RatingStarFilter from './RatingStarsFilter'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   categories: Category[]
@@ -24,6 +25,7 @@ export type FormPriceState = {
 
 export default function Aside({ categories, queryConfig }: Props) {
   const navigate = useNavigate()
+  const { t } = useTranslation(['home'])
   const { category: categoryParam } = queryConfig
   const {
     control,
@@ -86,7 +88,7 @@ export default function Aside({ categories, queryConfig }: Props) {
             </g>
           </g>
         </svg>
-        Tất cả danh mục
+        {t('aside.all categories')}
       </Link>
       <div className='my-4 h-[1px] bg-gray-300' />
       <ul>
@@ -135,7 +137,7 @@ export default function Aside({ categories, queryConfig }: Props) {
             />
           </g>
         </svg>
-        Bộ lọc tìm kiếm
+        {t('aside.filter search')}
       </div>
       <div className='my-4 h-[1px] bg-gray-300' />
       <div className='my-5'>

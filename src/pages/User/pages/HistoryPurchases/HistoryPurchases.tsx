@@ -19,15 +19,11 @@ const statusTaps = [
 
 export default function HistoryPurchases() {
   const params = useQueryParams() as { status: string }
-  const status = Number(params.status)
+  const status = Number(params.status) || purchasesStatus.all
 
   const { data: purchasesData } = useQuery({
     queryKey: ['purchases', status],
-    queryFn: () =>
-      purchaseApi.readPurchases(
-        (status as PurchaseListStatus) ||
-          (purchasesStatus.all as PurchaseListStatus)
-      )
+    queryFn: () => purchaseApi.readPurchases(status as PurchaseListStatus)
   })
   const purchases = purchasesData?.data.data
   const renderTaps = () => {
