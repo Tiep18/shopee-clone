@@ -20,13 +20,13 @@ const InputNumber = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) {
-    const [loacalValue, setLocalValut] = useState(value)
+    const [loacalValue, setLocalValue] = useState(value)
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.target
       if (/^\d+$/.test(value) || value === '') {
         onChange && onChange(event)
-        setLocalValut(value)
+        setLocalValue(value)
       }
     }
     return (
@@ -35,7 +35,7 @@ const InputNumber = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           onChange={handleChange}
           className={inputClassName}
-          value={value || loacalValue}
+          value={value === undefined ? loacalValue : value}
           {...rest}
         />
         <div className={errorClassName}>{message}</div>

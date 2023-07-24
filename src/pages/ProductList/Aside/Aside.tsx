@@ -2,16 +2,15 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import classNames from 'classnames'
 import omit from 'lodash/omit'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
 import InputNumber from 'src/components/InputNumber'
-import InputV2 from 'src/components/InputV2'
 import path from 'src/contance/path'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
 import { Category } from 'src/types/category.type'
 import { filterPriceSchema } from 'src/utils/rules'
 import RatingStarFilter from './RatingStarsFilter'
-import { useTranslation } from 'react-i18next'
 
 interface Props {
   categories: Category[]
@@ -144,7 +143,7 @@ export default function Aside({ categories, queryConfig }: Props) {
         <div className='mb-4 font-semibold'>Khoảng giá</div>
         <form className='mt-2' onSubmit={onSubmit}>
           <div className='flex items-start'>
-            {/* <Controller
+            <Controller
               control={control}
               name='price_min'
               render={({ field }) => {
@@ -161,9 +160,9 @@ export default function Aside({ categories, queryConfig }: Props) {
                   />
                 )
               }}
-            /> */}
+            />
 
-            <InputV2
+            {/* <InputV2
               type='number'
               control={control}
               name='price_min'
@@ -173,7 +172,7 @@ export default function Aside({ categories, queryConfig }: Props) {
               onChange={() => {
                 trigger('price_max')
               }}
-            />
+            /> */}
 
             <div className='mx-2 mt-2 shrink-0'>-</div>
             <Controller

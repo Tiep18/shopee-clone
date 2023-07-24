@@ -3,7 +3,7 @@ import { ExtraPurchase } from 'src/types/purchase.type'
 import User from 'src/types/user.type'
 import { getAccessTokenFromLS, getUserFromLS } from 'src/utils/auth'
 
-interface InitialContext {
+interface AppContextProps {
   isAuthenticated: boolean
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
   user: User
@@ -13,7 +13,7 @@ interface InitialContext {
   reset: () => void
 }
 
-const initialAppContext: InitialContext = {
+export const getInitialAppContext: () => AppContextProps = () => ({
   isAuthenticated: Boolean(getAccessTokenFromLS()),
   setIsAuthenticated: () => null,
   user: getUserFromLS(),
@@ -21,20 +21,23 @@ const initialAppContext: InitialContext = {
   extraPurchaseList: [],
   setExtraPurchaseList: () => null,
   reset: () => null
-}
+})
+const initialAppContext = getInitialAppContext()
 export const AppContextProvider = createContext(initialAppContext)
 
 export default function AppContext({
-  children
+  children,
+  defaultValue = initialAppContext
 }: {
   children: React.ReactNode
+  defaultValue?: AppContextProps
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    initialAppContext.isAuthenticated
+    defaultValue.isAuthenticated
   )
-  const [user, setUser] = useState<User>(initialAppContext.user)
+  const [user, setUser] = useState<User>(defaultValue.user)
   const [extraPurchaseList, setExtraPurchaseList] = useState<ExtraPurchase[]>(
-    initialAppContext.extraPurchaseList
+    defaultValue.extraPurchaseList
   )
 
   const reset = () => {

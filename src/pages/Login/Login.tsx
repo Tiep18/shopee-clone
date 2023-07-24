@@ -84,6 +84,7 @@ export default function Login() {
               />
 
               <Button
+                type='submit'
                 isLoading={loginMutation.isLoading}
                 className='mt-4 flex w-full items-center justify-center rounded bg-red-500 p-3 text-white hover:bg-red-700'
               >

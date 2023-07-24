@@ -30,7 +30,7 @@ function InputV2<
     ...rest
   } = props
   const { field, fieldState } = useController(props)
-  const [loacalValue, setLocalValut] = useState<string>(field.value)
+  const [loacalValue, setLocalValue] = useState<string>(field.value)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value
@@ -38,7 +38,7 @@ function InputV2<
       type === 'number' && (/^\d+$/.test(inputValue) || inputValue === '')
     if (isInputNumber || type !== 'number') {
       onChange && onChange(event)
-      setLocalValut(inputValue)
+      setLocalValue(inputValue)
       field.onChange(event)
     }
   }
@@ -49,7 +49,7 @@ function InputV2<
         {...rest}
         onChange={handleChange}
         className={inputClassName}
-        value={value || loacalValue}
+        value={value === undefined ? loacalValue : value}
       />
       <div className={errorClassName}>{fieldState.error?.message}</div>
     </div>

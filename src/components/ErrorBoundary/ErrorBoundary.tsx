@@ -1,4 +1,4 @@
-import { Component, ReactNode } from 'react'
+import { Component, ErrorInfo, ReactNode } from 'react'
 
 interface Props {
   children?: ReactNode
@@ -16,6 +16,10 @@ export default class ErrorBoundary extends Component<Props, State> {
   public static getDerivedStateFromError(): State {
     // Update state so the next render will show the fallback UI.
     return { hasError: true }
+  }
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // eslint-disable-next-line no-console
+    console.log(error, errorInfo)
   }
 
   public render() {
