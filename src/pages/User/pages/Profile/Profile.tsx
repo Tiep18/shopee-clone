@@ -15,6 +15,7 @@ import { setAccessTokenAndUserToLS } from 'src/utils/auth'
 import { profileSchema } from 'src/utils/rules'
 import { getAvatarUrl, isUnprocessableEntityAxiosError } from 'src/utils/utils'
 import DateSelect from '../../components/DateSelect'
+import { Helmet } from 'react-helmet-async'
 
 type UpdateFormData = {
   address: string | undefined
@@ -129,6 +130,13 @@ export default function Profile() {
 
   return (
     <div className='rounded-sm border border-gray-200 bg-white px-6 pb-6 text-sm shadow-sm'>
+      <Helmet prioritizeSeoTags>
+        <title>Profile | Shopee clone</title>
+        <meta
+          property='og:Profile | Shopee clone'
+          content='your shopee clone profile'
+        />
+      </Helmet>
       <div className='border-b border-b-gray-200 py-4'>
         <div className='text-xl capitalize'>Hồ sơ của tôi</div>
         <div className='mt-1 text-gray-500'>

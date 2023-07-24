@@ -6,6 +6,7 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx'
 import { AppContextProvider } from './contexts/AppContext'
 import useRouteElement from './useRouteElement'
 import { removeLSEventTarget } from './utils/auth'
+import { HelmetProvider } from 'react-helmet-async'
 
 function App() {
   const routeElement = useRouteElement()
@@ -19,10 +20,12 @@ function App() {
   }, [reset])
   return (
     <div>
-      <ErrorBoundary>
-        {routeElement}
-        <ToastContainer />
-      </ErrorBoundary>
+      <HelmetProvider>
+        <ErrorBoundary>
+          {routeElement}
+          <ToastContainer />
+        </ErrorBoundary>
+      </HelmetProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </div>
   )

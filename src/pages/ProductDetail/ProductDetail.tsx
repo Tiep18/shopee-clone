@@ -19,6 +19,8 @@ import { toast } from 'react-toastify'
 import purchasesStatus from 'src/contance/purchase'
 import path from 'src/contance/path'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
+import { convert } from 'html-to-text'
 
 export default function ProductDetail() {
   const { nameId } = useParams()
@@ -120,6 +122,15 @@ export default function ProductDetail() {
   if (!product) return
   return (
     <div className='bg-gray-100 pb-10 pt-8 '>
+      <Helmet prioritizeSeoTags>
+        <title>{product.name}</title>
+        <meta
+          property={`og:${product.name}`}
+          content={convert(product.description, {
+            limits: { maxInputLength: 150 }
+          })}
+        />
+      </Helmet>
       <div className='container rounded-sm bg-white py-4 shadow-sm'>
         <div className='grid grid-cols-12 gap-4'>
           <div className='col-span-5'>

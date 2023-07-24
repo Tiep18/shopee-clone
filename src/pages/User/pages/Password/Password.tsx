@@ -10,6 +10,7 @@ import userApi from 'src/apis/user.api'
 import omit from 'lodash/omit'
 import { isUnprocessableEntityAxiosError } from 'src/utils/utils'
 import { ErrorResponseAPI } from 'src/types/utils.type'
+import { Helmet } from 'react-helmet-async'
 
 type FormData = Pick<
   InferType<typeof profileSchema>,
@@ -61,6 +62,13 @@ export default function Password() {
   })
   return (
     <div className='rounded-sm border border-gray-200 bg-white px-6 pb-6 text-sm shadow-sm'>
+      <Helmet prioritizeSeoTags>
+        <title>Change Password | Shopee clone</title>
+        <meta
+          property='og:Change Password | Shopee clone'
+          content='change your password'
+        />
+      </Helmet>
       <div className='border-b border-b-gray-200 py-4'>
         <div className='text-xl capitalize'>Đổi mật khẩu</div>
         <div className='mt-1 text-gray-500'>

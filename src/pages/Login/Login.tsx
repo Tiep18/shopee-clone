@@ -12,6 +12,7 @@ import { useContext } from 'react'
 import { AppContextProvider } from 'src/contexts/AppContext'
 import Button from 'src/components/Button'
 import path from 'src/contance/path'
+import { Helmet } from 'react-helmet-async'
 
 type FormData = InferType<typeof loginSchema>
 
@@ -57,6 +58,13 @@ export default function Login() {
 
   return (
     <div className='bg-orange'>
+      <Helmet prioritizeSeoTags>
+        <title>Login | Shopee clone</title>
+        <meta
+          property='og:Login | Shopee clone'
+          content='Log in Shopee clone project'
+        />
+      </Helmet>
       <div className='container'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-24'>
           <div className='lg:col-span-2 lg:col-start-4 '>
@@ -79,6 +87,8 @@ export default function Login() {
                 name='password'
                 register={register}
                 className='mt-3'
+                closeEyeClassName='right-4 top-4'
+                openEyeClassName='right-4 top-3'
                 message={errors.password?.message}
                 placeholder='Password'
               />

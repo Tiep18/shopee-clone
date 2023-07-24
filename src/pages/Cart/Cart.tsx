@@ -13,6 +13,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { AppContextProvider } from 'src/contexts/AppContext'
 import noCartImg from 'src/assets/images/no-cart.png'
 import path from 'src/contance/path'
+import { Helmet } from 'react-helmet-async'
 
 export default function Cart() {
   const elemenRef = useRef<HTMLDivElement>(null)
@@ -159,6 +160,13 @@ export default function Cart() {
   if (!purchaseList) return
   return (
     <div className='bg-gray-100 py-8'>
+      <Helmet prioritizeSeoTags>
+        <title>Cart | Shopee clone</title>
+        <meta
+          property={`og:Cart | Shopee clone`}
+          content='your shopee clone cart'
+        />
+      </Helmet>
       {extraPurchaseList.length > 0 ? (
         <div className='container'>
           <div className=' grid grid-cols-12 rounded-sm bg-white px-10 py-5 capitalize shadow-sm'>

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { Helmet } from 'react-helmet-async'
 import { Link, createSearchParams } from 'react-router-dom'
 import purchaseApi from 'src/apis/purchase.api'
 import path from 'src/contance/path'
@@ -47,6 +48,13 @@ export default function HistoryPurchases() {
   }
   return (
     <div>
+      <Helmet prioritizeSeoTags>
+        <title>Purchase History | Shopee clone</title>
+        <meta
+          property='og:Purchase History | Shopee clone'
+          content='your purchases history'
+        />
+      </Helmet>
       <div className='flex items-center rounded-sm bg-white shadow-sm'>
         {renderTaps()}
       </div>

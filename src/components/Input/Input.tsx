@@ -8,6 +8,8 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   message?: string
   inputClassName?: string
   errorClassName?: string
+  closeEyeClassName?: string
+  openEyeClassName?: string
 }
 
 export default function Input({
@@ -19,6 +21,8 @@ export default function Input({
   type,
   inputClassName = 'w-full p-3 border rounded outline-none border-gray-300 focus:border-gray-500 focus:shadow text-sm',
   errorClassName = 'h-[1.25rem] text-red-500 mt-1',
+  closeEyeClassName = 'right-4 top-3',
+  openEyeClassName = 'right-4 top-2',
   ...rest
 }: Props) {
   const [isOpenEye, setIsOpenEye] = useState(false)
@@ -44,9 +48,13 @@ export default function Input({
         {...rest}
       />
       {type === 'password' && isOpenEye && (
-        <button
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+        <div
           onClick={handleClick}
-          className='absolute right-4 top-2 select-none border-none outline-none'
+          className={
+            'absolute cursor-pointer select-none border-none outline-none ' +
+            openEyeClassName
+          }
         >
           <svg fill='none' viewBox='0 0 20 12' className='h-5 w-5'>
             <path
@@ -58,12 +66,16 @@ export default function Input({
               clipRule='evenodd'
             />
           </svg>
-        </button>
+        </div>
       )}
       {type === 'password' && !isOpenEye && (
-        <button
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+        <div
           onClick={handleClick}
-          className='absolute right-4 top-3 select-none border-none outline-none'
+          className={
+            'absolute cursor-pointer select-none border-none outline-none ' +
+            closeEyeClassName
+          }
         >
           <svg fill='none' viewBox='0 0 20 10' className='h-5 w-5'>
             <path
@@ -73,7 +85,7 @@ export default function Input({
               d='M19.834 1.15a.768.768 0 00-.142-1c-.322-.25-.75-.178-1 .143-.035.036-3.997 4.712-8.709 4.712-4.569 0-8.71-4.712-8.745-4.748a.724.724 0 00-1-.071.724.724 0 00-.07 1c.07.106.927 1.07 2.283 2.141L.631 5.219a.69.69 0 00.036 1c.071.142.25.213.428.213a.705.705 0 00.5-.214l1.963-2.034A13.91 13.91 0 006.806 5.86l-.75 2.535a.714.714 0 00.5.892h.214a.688.688 0 00.679-.535l.75-2.535a9.758 9.758 0 001.784.179c.607 0 1.213-.072 1.785-.179l.75 2.499c.07.321.392.535.677.535.072 0 .143 0 .179-.035a.714.714 0 00.5-.893l-.75-2.498a13.914 13.914 0 003.248-1.678L18.3 6.147a.705.705 0 00.5.214.705.705 0 00.499-.214.723.723 0 00.036-1l-1.82-1.891c1.463-1.071 2.32-2.106 2.32-2.106z'
             />
           </svg>
-        </button>
+        </div>
       )}
 
       <div className={errorClassName}>{message}</div>

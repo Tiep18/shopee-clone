@@ -7,6 +7,7 @@ import Aside from './Aside'
 import Pagination from './Pagitation'
 import Product from './Product'
 import SortBar from './SortBar'
+import { Helmet } from 'react-helmet-async'
 
 export default function ProductList() {
   const queryConfig = useQueryConfig()
@@ -25,6 +26,13 @@ export default function ProductList() {
 
   return (
     <div className='bg-gray-100'>
+      <Helmet prioritizeSeoTags>
+        <title>Home | Shopee clone</title>
+        <meta
+          property='og:Home | Shopee clone'
+          content='shopee clone home page'
+        />
+      </Helmet>
       <div className='container'>
         <div className='grid grid-cols-12 gap-4 py-4'>
           <div className='col-span-3'>
