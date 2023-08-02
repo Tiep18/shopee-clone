@@ -48,7 +48,7 @@ const loginRequest = rest.post(`${config.baseURL}login`, (req, res, ctx) => {
   return res(ctx.status(200), ctx.json(userRes(accessToken)))
 })
 
-const logoutRequest = rest.post(`${config.baseURL}logout`, (req, res, ctx) => {
+const logoutRequest = rest.post(`${config.baseURL}logout`, (_, res, ctx) => {
   return res(ctx.status(200), ctx.json(logoutRes))
 })
 
