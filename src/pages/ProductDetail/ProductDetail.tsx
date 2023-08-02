@@ -6,7 +6,8 @@ import Button from 'src/components/Button'
 import {
   discountCalculator,
   formatCurrency,
-  getIdFromNameId
+  getIdFromNameId,
+  isUnauthorizedAxiosError
 } from 'src/utils/utils'
 import RatingStars from '../ProductList/Product/RatingStars'
 import { useEffect, useRef, useState } from 'react'
@@ -55,6 +56,9 @@ export default function ProductDetail() {
       queryClient.invalidateQueries({
         queryKey: ['purchase', purchasesStatus.inCart]
       })
+    },
+    onError: (err) => {
+      if (isUnauthorizedAxiosError(err)) navigate(path.login)
     }
   })
 
@@ -71,6 +75,9 @@ export default function ProductDetail() {
       {
         onSuccess: (data) => {
           toast.success(data.data.message, { autoClose: 2000 })
+        },
+        onError: (err) => {
+          if (isUnauthorizedAxiosError(err)) navigate(path.login)
         }
       }
     )
@@ -81,6 +88,7 @@ export default function ProductDetail() {
       product_id: (product as ProductType)._id,
       buy_count: buyCount
     })
+
     navigate(path.cart, {
       state: { purchaseId: res.data.data._id }
     })
