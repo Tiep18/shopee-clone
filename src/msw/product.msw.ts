@@ -44,12 +44,9 @@ const productsRes = {
   }
 }
 
-const productsRequest = rest.get(
-  `${config.baseURL}products`,
-  (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(productsRes))
-  }
-)
+const productsRequest = rest.get(`${config.baseURL}products`, (_, res, ctx) => {
+  return res(ctx.status(200), ctx.json(productsRes))
+})
 
 const productRequests = [productsRequest]
 export default productRequests

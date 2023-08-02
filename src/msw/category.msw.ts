@@ -21,7 +21,7 @@ const categoriesRes = {
 
 const categoriesRequest = rest.get(
   `${config.baseURL}categories`,
-  (req, res, ctx) => {
+  (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(categoriesRes))
   }
 )

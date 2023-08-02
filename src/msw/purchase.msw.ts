@@ -8,7 +8,7 @@ const purchasesRes = {
 
 const purchasesRequest = rest.get(
   `${config.baseURL}purchases`,
-  (req, res, ctx) => {
+  (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(purchasesRes))
   }
 )

@@ -54,9 +54,7 @@ const logoutRequest = rest.post(`${config.baseURL}logout`, (req, res, ctx) => {
 
 const refreshTokenRequest = rest.post(
   `${config.baseURL}refresh-access-token`,
-  (req, res, ctx) => {
-    console.log('goi-------------------------')
-
+  (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(refreshTokenRes))
   }
 )
